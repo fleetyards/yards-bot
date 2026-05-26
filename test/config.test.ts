@@ -4,11 +4,11 @@ import { parseConfig } from "../src/config.js";
 const validYaml = `
 verifications:
   - name: rules
-    guild_id: "488772469411545098"
-    channel_id: "825007255195091025"
-    message_id: "1422180869384441906"
+    guild_id: "1000000000000000001"
+    channel_id: "1000000000000000002"
+    message_id: "1000000000000000003"
     emoji: "✅"
-    role_id: "1422176009528152115"
+    role_id: "1000000000000000004"
     on_remove: revoke
 sweep:
   on_startup: true
@@ -30,7 +30,7 @@ describe("parseConfig", () => {
   });
 
   it("rejects a non-snowflake guild_id", () => {
-    expect(() => parseConfig(validYaml.replace("488772469411545098", "abc"))).toThrow(/snowflake/);
+    expect(() => parseConfig(validYaml.replace("1000000000000000001", "abc"))).toThrow(/snowflake/);
   });
 
   it("rejects an invalid cron expression", () => {
@@ -46,17 +46,17 @@ describe("parseConfig", () => {
     const yaml = `
 verifications:
   - name: dup
-    guild_id: "488772469411545098"
-    channel_id: "825007255195091025"
-    message_id: "1422180869384441906"
+    guild_id: "1000000000000000001"
+    channel_id: "1000000000000000002"
+    message_id: "1000000000000000003"
     emoji: "✅"
-    role_id: "1422176009528152115"
+    role_id: "1000000000000000004"
   - name: dup
-    guild_id: "488772469411545098"
-    channel_id: "825007255195091025"
-    message_id: "1422180869384441907"
+    guild_id: "1000000000000000001"
+    channel_id: "1000000000000000002"
+    message_id: "1000000000000000005"
     emoji: "❌"
-    role_id: "1422176009528152115"
+    role_id: "1000000000000000004"
 sweep:
   on_startup: true
   cron: "0 */6 * * *"
