@@ -1,0 +1,15 @@
+# Example config for yards-bot v1.
+# Copy to verifications.yaml and fill in real IDs before running.
+
+verifications:
+  - name: rules-checkmark
+    guild_id: "488772469411545098"
+    channel_id: "825007255195091025"
+    message_id: "1422180869384441906"
+    emoji: "✅"           # unicode emoji, or "name:id" for a custom server emoji
+    role_id: "1422176009528152115"
+    on_remove: revoke     # revoke | keep
+
+sweep:
+  on_startup: true
+  cron: "0 */6 * * *"     # every 6h
