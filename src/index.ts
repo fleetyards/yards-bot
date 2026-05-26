@@ -3,6 +3,7 @@ import { loadConfig } from "./config.js";
 import { loadEnv } from "./env.js";
 import { registerReady } from "./events/ready.js";
 import { logger } from "./logger.js";
+import { createDiscordRest } from "./rest.js";
 
 async function main(): Promise<void> {
   const env = loadEnv();
@@ -13,7 +14,8 @@ async function main(): Promise<void> {
   );
 
   const client = createClient();
-  registerReady(client, cfg);
+  const rest = createDiscordRest(client.rest);
+  registerReady(client, cfg, rest);
 
   client.on("error", (err) => {
     logger.error({ err }, "client error");
