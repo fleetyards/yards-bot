@@ -1,16 +1,36 @@
+import { createClient } from "./client.js";
 import { loadConfig } from "./config.js";
+import { loadEnv } from "./env.js";
+import { registerReady } from "./events/ready.js";
+import { logger } from "./logger.js";
 
-function main(): void {
-  const path = process.env.CONFIG_PATH ?? "config/verifications.yaml";
-  const cfg = loadConfig(path);
-  console.log(`Loaded config from ${path}`);
-  console.log(`  ${cfg.verifications.length} verification(s):`);
-  for (const v of cfg.verifications) {
-    console.log(
-      `    - ${v.name}: guild=${v.guild_id} message=${v.message_id} emoji=${v.emoji} role=${v.role_id} on_remove=${v.on_remove}`,
-    );
-  }
-  console.log(`  sweep: on_startup=${cfg.sweep.on_startup} cron='${cfg.sweep.cron}'`);
+async function main(): Promise<void> {
+  const env = loadEnv();
+  const cfg = loadConfig(env.CONFIG_PATH);
+  logger.info(
+    { configPath: env.CONFIG_PATH, verifications: cfg.verifications.length },
+    "config loaded",
+  );
+
+  const client = createClient();
+  registerReady(client, cfg);
+
+  client.on("error", (err) => {
+    logger.error({ err }, "client error");
+  });
+
+  const shutdown = async (signal: string): Promise<void> => {
+    logger.info({ signal }, "shutting down");
+    await client.destroy();
+    process.exit(0);
+  };
+  process.once("SIGINT", () => void shutdown("SIGINT"));
+  process.once("SIGTERM", () => void shutdown("SIGTERM"));
+
+  await client.login(env.DISCORD_TOKEN);
 }
 
-main();
+main().catch((err: unknown) => {
+  logger.fatal({ err }, "fatal error during startup");
+  process.exit(1);
+});
