@@ -32,5 +32,9 @@ export function createDiscordRest(rest: REST): DiscordRestLike {
     async addMemberRole({ guildId, userId, roleId }) {
       await rest.put(Routes.guildMemberRole(guildId, userId, roleId));
     },
+
+    async removeMemberRole({ guildId, userId, roleId }) {
+      await rest.delete(Routes.guildMemberRole(guildId, userId, roleId));
+    },
   };
 }

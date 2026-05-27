@@ -21,6 +21,7 @@ function mockRest(overrides: Partial<DiscordRestLike> = {}): DiscordRestLike {
     listReactors: vi.fn().mockResolvedValue([]),
     getMember: vi.fn().mockResolvedValue(null),
     addMemberRole: vi.fn().mockResolvedValue(undefined),
+    removeMemberRole: vi.fn().mockResolvedValue(undefined),
     ...overrides,
   };
 }

@@ -30,6 +30,7 @@ export interface DiscordRestLike {
   // Returns null when the user is not a member of the guild.
   getMember(opts: { guildId: string; userId: string }): Promise<MemberInfo | null>;
   addMemberRole(opts: { guildId: string; userId: string; roleId: string }): Promise<void>;
+  removeMemberRole(opts: { guildId: string; userId: string; roleId: string }): Promise<void>;
 }
 
 const PAGE_SIZE = 100;

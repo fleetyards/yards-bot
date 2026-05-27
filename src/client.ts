@@ -1,11 +1,11 @@
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits, Partials } from "discord.js";
 
-// Step 3 only needs the `Guilds` intent to log a list of connected guilds on READY.
-// Reaction handlers (step 5) will add `GuildMessageReactions` and the privileged
-// `GuildMembers` intent (which must be toggled in the Discord Developer Portal),
-// along with the `Message`/`Channel`/`Reaction` partials needed for old messages.
 export function createClient(): Client {
   return new Client({
-    intents: [GatewayIntentBits.Guilds],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessageReactions],
+    // Partials let the bot receive reaction events on messages older than its uptime.
+    // Partials.User is required for MessageReactionRemove on uncached users — the gateway
+    // payload only contains user_id, not the full user/member object that the add event ships.
+    partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User],
   });
 }
