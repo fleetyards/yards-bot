@@ -5,6 +5,7 @@ coverage/
 .env
 .env.*
 !.env.example
+config/verifications.yaml
 .DS_Store
 .idea/
 .vscode/
