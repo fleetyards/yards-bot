@@ -1,6 +1,8 @@
 import { createClient } from "./client.js";
 import { loadConfig } from "./config.js";
 import { loadEnv } from "./env.js";
+import { registerReactionAdd } from "./events/reactionAdd.js";
+import { registerReactionRemove } from "./events/reactionRemove.js";
 import { registerReady } from "./events/ready.js";
 import { logger } from "./logger.js";
 import { createDiscordRest } from "./rest.js";
@@ -16,6 +18,8 @@ async function main(): Promise<void> {
   const client = createClient();
   const rest = createDiscordRest(client.rest);
   registerReady(client, cfg, rest);
+  registerReactionAdd(client, cfg, rest);
+  registerReactionRemove(client, cfg, rest);
 
   client.on("error", (err) => {
     logger.error({ err }, "client error");
