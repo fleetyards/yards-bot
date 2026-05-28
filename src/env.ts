@@ -4,6 +4,7 @@ const envSchema = z.object({
   DISCORD_TOKEN: z.string().min(1, "DISCORD_TOKEN is required"),
   LOG_LEVEL: z.enum(["trace", "debug", "info", "warn", "error", "fatal"]).default("info"),
   CONFIG_PATH: z.string().default("config/verifications.yaml"),
+  HEALTH_PORT: z.coerce.number().int().min(1).max(65535).default(8080),
 });
 
 export type Env = z.infer<typeof envSchema>;

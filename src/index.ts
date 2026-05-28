@@ -4,6 +4,7 @@ import { loadEnv } from "./env.js";
 import { registerReactionAdd } from "./events/reactionAdd.js";
 import { registerReactionRemove } from "./events/reactionRemove.js";
 import { registerReady } from "./events/ready.js";
+import { createHealthServer, createHealthState } from "./health.js";
 import { logger } from "./logger.js";
 import { createDiscordRest } from "./rest.js";
 
@@ -15,9 +16,12 @@ async function main(): Promise<void> {
     "config loaded",
   );
 
+  const health = createHealthState();
+  const healthServer = createHealthServer(health, env.HEALTH_PORT);
+
   const client = createClient();
   const rest = createDiscordRest(client.rest);
-  registerReady(client, cfg, rest);
+  registerReady(client, cfg, rest, health);
   registerReactionAdd(client, cfg, rest);
   registerReactionRemove(client, cfg, rest);
 
@@ -27,6 +31,8 @@ async function main(): Promise<void> {
 
   const shutdown = async (signal: string): Promise<void> => {
     logger.info({ signal }, "shutting down");
+    health.gatewayReady = false;
+    healthServer.close();
     await client.destroy();
     process.exit(0);
   };
