@@ -1,7 +1,8 @@
 import { type Client, Events } from "discord.js";
 import type { Config } from "../config.js";
 import { logger } from "../logger.js";
-import { type DiscordRestLike, runSweep } from "../sweep.js";
+import { scheduleSweep, sweepAll } from "../scheduler.js";
+import type { DiscordRestLike } from "../sweep.js";
 
 export function registerReady(client: Client, cfg: Config, rest: DiscordRestLike): void {
   client.once(Events.ClientReady, async (readyClient) => {
@@ -16,15 +17,11 @@ export function registerReady(client: Client, cfg: Config, rest: DiscordRestLike
       "ready",
     );
 
-    if (!cfg.sweep.on_startup) return;
-
-    for (const v of cfg.verifications) {
-      try {
-        const result = await runSweep(rest, v);
-        logger.info({ verification: v.name, ...result }, "sweep complete");
-      } catch (err) {
-        logger.error({ err, verification: v.name }, "sweep failed");
-      }
+    if (cfg.sweep.on_startup) {
+      await sweepAll(cfg, rest);
     }
+
+    scheduleSweep(cfg, rest);
+    logger.info({ cron: cfg.sweep.cron }, "cron sweep scheduled");
   });
 }
