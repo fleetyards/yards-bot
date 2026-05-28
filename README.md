@@ -2,6 +2,12 @@
 
 Discord bot for the [Fleetyards](https://fleetyards.net) community server.
 
+## Scope
+
+**Single-tenant.** This bot is built for the Fleetyards Discord only. The Discord application has `bot_public: false`, so it cannot be added to other servers, and the config hardcodes Fleetyards-specific guild/channel/message/role IDs anyway.
+
+Anything we want to make available to other Star Citizen servers (slash-command ship lookups, hangar lookups, release announcements via webhook, etc.) belongs in a separate, public, multi-tenant bot — not yet started. yards-bot's scope is verification, role management, and other Fleetyards-only mod/admin work.
+
 ## Status
 
 v0.1 — scaffold only. See [`docs/exec-plans/v1.md`](docs/exec-plans/v1.md) for the v1 design and feature scope.
@@ -36,7 +42,7 @@ pnpm dev
 
 The bot needs `View Channel`, `Read Message History`, and `Manage Roles` on the target guild. Its top role must sit **above** any role it grants — Discord silently rejects role changes otherwise.
 
-The `Server Members Intent` (privileged) must be enabled in the [Developer Portal](https://discord.com/developers/applications) under the bot's settings.
+No privileged intents are required. v1 uses `Guilds` + `GuildMessageReactions` and fetches members on demand via REST, so the `Server Members Intent` does not need to be enabled.
 
 ## Deployment
 
